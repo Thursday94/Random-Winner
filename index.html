@@ -3,186 +3,510 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Elephant Coffee — Розыгрыш</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Elephant Coffee — «Поймай логотип» v2</title>
     <style>
         :root {
             --brand: #ffd7b3;
-            --bg: #fff8f1;
-            --text: #1e1e1e;
-            --btn: #222;
-            --card: #ffeedd;
+            /* фирменный оттенок */
+            --bg: #0f0f0f;
+            /* фон игровой зоны */
+            --text: #fff;
         }
 
+        * {
+            box-sizing: border-box
+        }
+
+        html,
         body {
-            font-family: system-ui, Segoe UI, Roboto, Arial;
-            margin: 24px;
-            background: var(--bg);
-            color: var(--text);
+            height: 100%;
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #111;
+            color: var(--text)
         }
 
-        textarea {
-            width: 100%;
-            min-height: 140px;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 16px
         }
 
-        .controls {
+        .card {
+            background: #151515;
+            border: 1px solid #222;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
+            overflow: hidden
+        }
+
+        .header {
             display: flex;
-            gap: 10px;
             flex-wrap: wrap;
-            margin-top: 10px
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid #222;
+            background: linear-gradient(180deg, #181818, #141414)
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .brand img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            margin: 0;
+            letter-spacing: .3px
+        }
+
+        .hud {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .pill {
+            background: #1f1f1f;
+            border: 1px solid #2a2a2a;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-weight: 600
+        }
+
+        .pill strong {
+            color: var(--brand)
         }
 
         .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
+            appearance: none;
             border: none;
-            border-radius: 10px;
-            background: var(--btn);
-            color: #fff;
+            background: var(--brand);
+            color: #111;
+            font-weight: 800;
+            border-radius: 999px;
+            padding: 10px 18px;
             cursor: pointer;
-            font-size: 1rem;
+            transition: transform .08s ease, box-shadow .2s ease;
+            box-shadow: 0 6px 20px rgba(255, 215, 179, .35)
         }
 
-        .btn.secondary {
-            background: #666
+        .btn:hover {
+            transform: translateY(-1px)
+        }
+
+        .btn:active {
+            transform: translateY(0)
+        }
+
+        .btn[disabled] {
+            opacity: .6;
+            cursor: not-allowed;
+            filter: grayscale(.2)
+        }
+
+        .select {
+            appearance: none;
+            background: #1f1f1f;
+            border: 1px solid #2a2a2a;
+            color: #eee;
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-weight: 700
+        }
+
+        /* Игровая зона */
+        #game {
+            position: relative;
+            height: min(70vh, 720px);
+            min-height: 420px;
+            background: var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="90" fill="rgba(255,255,255,0.03)">ELEPHANT</text></svg>') center/contain no-repeat;
+            border-top: 1px solid #202020;
+            overflow: hidden
+        }
+
+        .grid {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none
         }
 
         .logo {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: var(--brand);
-            padding: 3px;
-            object-fit: cover;
-            box-shadow: 0 0 0 3px rgba(255, 215, 179, .4) inset;
+            position: absolute;
+            top: -80px;
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            cursor: pointer;
+            user-select: none;
+            will-change: transform;
+            filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .5));
         }
 
-        .spin {
-            animation: spin 1s linear infinite
+        .gold {
+            filter: drop-shadow(0 6px 14px rgba(255, 215, 0, .55)) saturate(1.2) hue-rotate(12deg)
         }
 
-        @keyframes spin {
-            from {
-                transform: rotate(0deg)
-            }
-
+        @keyframes fall {
             to {
-                transform: rotate(360deg)
+                transform: translateY(calc(100vh + 120px)) rotate(var(--rot-end, 360deg));
             }
         }
 
-        .result {
-            display: none;
-            margin-top: 18px;
-            padding: 16px;
-            background: var(--card);
-            border-radius: 12px;
-            font-size: 1.1rem;
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+                opacity: 1
+            }
+
+            80% {
+                transform: scale(1.25);
+                opacity: .9
+            }
+
+            100% {
+                transform: scale(.6);
+                opacity: 0
+            }
+        }
+
+        /* Дождь зёрен (декор) */
+        .beans {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden
+        }
+
+        .bean {
+            position: absolute;
+            top: -20px;
+            width: 10px;
+            height: 16px;
+            border-radius: 50%/60% 60% 40% 40%;
+            background: #2b1b12;
+            opacity: .18;
+            animation: beanFall linear infinite;
+            transform: rotate(20deg)
+        }
+
+        @keyframes beanFall {
+            to {
+                transform: translateY(110%) rotate(380deg)
+            }
+        }
+
+        /* Оверлеи */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(0, 0, 0, .55), rgba(0, 0, 0, .65));
+            backdrop-filter: blur(2px)
+        }
+
+        .modal {
+            background: #141414;
+            border: 1px solid #272727;
+            border-radius: 16px;
+            padding: 16px 18px;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, .5);
+            max-width: 92%;
+            text-align: center
+        }
+
+        .footer {
+            padding: 12px 16px;
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            color: #bdbdbd;
+            font-size: 14px
+        }
+
+        .footer code {
+            background: #1b1b1b;
+            border: 1px solid #262626;
+            border-radius: 8px;
+            padding: 2px 6px
+        }
+
+        .coupon {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            background: #1b1b1b;
+            border: 1px dashed #444;
+            padding: 6px 10px;
+            border-radius: 10px
         }
     </style>
 </head>
 
 <body>
-    <h2>🎯 Розыгрыш Elephant Coffee</h2>
-    <textarea id="namesInput" placeholder="Имена участников (каждый с новой строки)"></textarea>
+    <div class="wrap">
+        <div class="card">
+            <div class="header">
+                <div class="brand">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/OOjs_UI_icon_heart.svg" alt="logo" />
+                    <h1>Мини‑игра «Поймай логотип» — Elephant Coffee v2</h1>
+                </div>
+                <div class="hud">
+                    <label class="pill" title="Сложность влияет на частоту спавна и скорость падения">
+                        Сложность:
+                        <select id="difficulty" class="select">
+                            <option value="easy">Easy</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </label>
+                    <div class="pill">Время: <strong id="time">10.0</strong> c</div>
+                    <div class="pill">Счёт: <strong id="score">0</strong></div>
+                    <button id="start" class="btn">Старт</button>
+                </div>
+            </div>
 
-    <div class="controls">
-        <label>
-            Победителей:
-            <input id="count" type="number" value="1" min="1"
-                style="width:70px;padding:6px;border-radius:8px;border:1px solid #ccc">
-        </label>
+            <div id="game">
+                <div class="grid"></div>
+                <div class="beans" aria-hidden="true" id="beans"></div>
+            </div>
 
-        <button id="drawBtn" class="btn">
-            <img src="imageedit_4_5417855534.png" id="logoImg" class="logo" alt="logo">
-            Розыгрыш!
-        </button>
-
-        <button id="clearBtn" class="btn secondary">Очистить</button>
+            <div class="footer">
+                <div>
+                    Лови логотипы за 10 секунд. Обычный = +1, <b>золотой</b> = +5. Скидка = <b>счёт%</b> (ограничение
+                    сверху).
+                </div>
+                <div>
+                    Настройки: <code>IMG_SRC</code>, <code>GAME_DURATION_MS</code>, <code>MAX_DISCOUNT_PERCENT</code>.
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="result" id="result"></div>
-
     <script>
-        function unique(arr) {
-            return Array.from(new Set(arr.map(x => x.trim()).filter(Boolean)));
-        }
+        // ----------------------
+        // ⚙️ НАСТРОЙКИ ИГРЫ
+        // ----------------------
+        const GAME_DURATION_MS = 10_000;      // длительность игры (мс)
+        const MAX_DISCOUNT_PERCENT = 100;       // максимум скидки
 
-        function secureRandomInt(max) {
-            const buf = new Uint32Array(1);
-            const limit = Math.floor(0xFFFFFFFF / max) * max;
-            let x;
-            do {
-                crypto.getRandomValues(buf);
-                x = buf[0];
-            } while (x >= limit);
-            return x % max;
-        }
+        // Путь к твоему логотипу (PNG/SVG). С учётом твоей структуры — файл рядом с index.html
+        const IMG_SRC = './imageedit_4_5417855534.png';
 
-        const input = document.getElementById('namesInput');
-        const resultEl = document.getElementById('result');
-        const drawBtn = document.getElementById('drawBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const logoImg = document.getElementById('logoImg');
-        const countEl = document.getElementById('count');
-
-        function setSpin(on) {
-            if (on) logoImg.classList.add('spin');
-            else logoImg.classList.remove('spin');
-        }
-
-        clearBtn.onclick = () => {
-            input.value = "";
-            resultEl.style.display = "none";
+        // Параметры по сложностям
+        const DIFF = {
+            easy: { spawn: 520, fall: [3200, 5600], goldenChance: 0.05 },
+            normal: { spawn: 420, fall: [2600, 5000], goldenChance: 0.08 },
+            hard: { spawn: 320, fall: [2000, 4200], goldenChance: 0.12 },
         };
 
-        drawBtn.onclick = () => {
-            const list = unique(input.value.split("\n"));
-            const count = Math.max(1, Number(countEl.value) || 1);
+        const GOLD_BONUS = 5; // очков за золотой логотип
 
-            if (list.length === 0) {
-                alert("Введите участников!");
-                return;
-            }
+        // ----------------------
+        // 🔊 МЯГКИЙ ЗВУК «поп» (Web Audio)
+        // ----------------------
+        let audioCtx = null;
+        function clickPop() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const o = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                o.type = 'triangle';
+                o.frequency.setValueAtTime(880, audioCtx.currentTime);
+                o.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.12);
+                g.gain.value = 0.08; // громкость
+                g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.14);
+                o.connect(g).connect(audioCtx.destination);
+                o.start(); o.stop(audioCtx.currentTime + 0.15);
+            } catch (e) { }
+        }
 
-            setSpin(true);
-            resultEl.style.display = "block";
-            resultEl.textContent = "Выбираю…";
+        // ----------------------
+        // 🧠 ЛОГИКА
+        // ----------------------
+        const game = document.getElementById('game');
+        const btnStart = document.getElementById('start');
+        const timeEl = document.getElementById('time');
+        const scoreEl = document.getElementById('score');
+        const beansLayer = document.getElementById('beans');
+        const difficultySel = document.getElementById('difficulty');
 
-            let ticks = 0;
-            const maxTicks = 32;
+        let running = false;
+        let score = 0;
+        let t0 = 0;
+        let timerRaf = null;
+        let spawnInt = null;
+        let params = DIFF[difficultySel.value];
 
-            const t = setInterval(() => {
-                const fake = list[secureRandomInt(list.length)];
-                resultEl.textContent = "🎰 " + fake;
+        difficultySel.addEventListener('change', () => { params = DIFF[difficultySel.value]; });
 
-                if (++ticks >= maxTicks) {
-                    clearInterval(t);
+        function rand(min, max) { return Math.random() * (max - min) + min }
+        function clamp(n, a, b) { return Math.max(a, Math.min(b, n)) }
 
-                    const winners = [];
-                    const pool = [...list];
+        function spawnLogo() {
+            const rect = game.getBoundingClientRect();
+            const el = new Image();
+            el.src = IMG_SRC;
+            el.decoding = 'async';
+            el.className = 'logo';
 
-                    for (let i = 0; i < Math.min(count, pool.length); i++) {
-                        const index = secureRandomInt(pool.length);
-                        winners.push(pool[index]);
-                        pool.splice(index, 1);
+            // золотой?
+            const isGold = Math.random() < params.goldenChance;
+            if (isGold) el.classList.add('gold');
+
+            const size = clamp(rand(56, 96), 52, 110);
+            el.style.width = size + 'px';
+            el.style.height = size + 'px';
+            const x = rand(0, Math.max(0, rect.width - size));
+            el.style.left = x + 'px';
+
+            const rotEnd = (Math.random() < 0.5 ? -1 : 1) * rand(200, 520) + 'deg';
+            el.style.setProperty('--rot-end', rotEnd);
+
+            const fallMs = rand(params.fall[0], params.fall[1]);
+            el.style.animation = `fall ${fallMs}ms linear forwards`;
+
+            const catchHandler = (e) => {
+                if (!running) return; e.stopPropagation();
+                score += isGold ? GOLD_BONUS : 1;
+                scoreEl.textContent = String(score);
+                clickPop();
+                el.style.animation = 'pop 280ms ease-out forwards';
+                el.style.pointerEvents = 'none';
+                setTimeout(() => el.remove(), 280);
+            };
+            el.addEventListener('click', catchHandler, { passive: true });
+            el.addEventListener('touchstart', catchHandler, { passive: true });
+
+            el.addEventListener('animationend', () => el.remove(), { once: true });
+            game.appendChild(el);
+        }
+
+        function startGame() {
+            if (running) return;
+            running = true; score = 0; scoreEl.textContent = '0';
+            btnStart.disabled = true;
+            [...game.querySelectorAll('.logo')].forEach(n => n.remove());
+
+            // обратный отсчёт 3..2..1
+            countdown(3).then(() => {
+                t0 = performance.now();
+                const tick = (now) => {
+                    const elapsed = now - t0;
+                    const left = clamp((GAME_DURATION_MS - elapsed) / 1000, 0, GAME_DURATION_MS / 1000);
+                    timeEl.textContent = left.toFixed(1);
+                    if (elapsed < GAME_DURATION_MS && running) {
+                        timerRaf = requestAnimationFrame(tick);
+                    } else { endGame(); }
+                };
+                timerRaf = requestAnimationFrame(tick);
+                spawnInt = setInterval(spawnLogo, params.spawn);
+            });
+        }
+
+        function endGame() {
+            running = false;
+            cancelAnimationFrame(timerRaf);
+            clearInterval(spawnInt);
+            timeEl.textContent = '0.0';
+            [...game.querySelectorAll('.logo')].forEach(n => { n.style.pointerEvents = 'none'; });
+
+            const discount = clamp(score, 0, MAX_DISCOUNT_PERCENT);
+            const code = makeCoupon(discount);
+
+            showResult(discount, code);
+            btnStart.disabled = false;
+        }
+
+        function toast(text) {
+            const t = document.createElement('div');
+            t.textContent = text;
+            Object.assign(t.style, { position: 'absolute', left: '50%', top: '16px', transform: 'translateX(-50%)', background: 'rgba(0,0,0,.8)', border: '1px solid #333', color: '#fff', padding: '10px 14px', borderRadius: '12px', fontWeight: '700', boxShadow: '0 8px 24px rgba(0,0,0,.45)', zIndex: 5 });
+            game.appendChild(t);
+            setTimeout(() => { t.style.transition = 'all .35s ease'; t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(-8px)'; setTimeout(() => t.remove(), 380); }, 1200);
+        }
+
+        function countdown(seconds) {
+            return new Promise(resolve => {
+                const ov = document.createElement('div');
+                ov.className = 'overlay';
+                const md = document.createElement('div'); md.className = 'modal';
+                const txt = document.createElement('div'); txt.style.fontSize = '64px'; txt.style.fontWeight = '900'; txt.textContent = seconds;
+                md.appendChild(txt); ov.appendChild(md); game.appendChild(ov);
+                let n = seconds;
+                const id = setInterval(() => {
+                    n--; txt.textContent = n > 0 ? n : 'Go!'; clickPop();
+                    if (n <= 0) {
+                        clearInterval(id);
+                        setTimeout(() => { ov.remove(); resolve(); }, 450);
                     }
+                }, 1000);
+            });
+        }
 
-                    resultEl.innerHTML =
-                        "<strong>Победители:</strong><br>" +
-                        winners.map((w, i) => `${i + 1}. ${w}`).join("<br>");
+        function showResult(discount, code) {
+            const ov = document.createElement('div'); ov.className = 'overlay';
+            const md = document.createElement('div'); md.className = 'modal';
+            md.innerHTML = `
+        <h2 style="margin:.2rem 0 0;font-size:28px">Итог</h2>
+        <p style="opacity:.85;margin:.2rem 0 .6rem">Твой счёт: <b>${score}</b> → Скидка: <b>${discount}%</b></p>
+        <div class="coupon"><span id="couponText">${code}</span><button class="btn" id="copyBtn">Скопировать</button></div>
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <button class="btn" id="againBtn">Ещё раз</button>
+          <button class="btn" id="closeBtn" style="background:#eaeaea">Закрыть</button>
+        </div>`;
+            ov.appendChild(md); game.appendChild(ov);
+            md.querySelector('#copyBtn').addEventListener('click', async () => {
+                const text = md.querySelector('#couponText').textContent; try { await navigator.clipboard.writeText(text); toast('Купон скопирован'); } catch (e) { toast('Скопируй вручную'); }
+            });
+            md.querySelector('#againBtn').addEventListener('click', () => { ov.remove(); startGame(); });
+            md.querySelector('#closeBtn').addEventListener('click', () => ov.remove());
+        }
 
-                    setSpin(false);
-                }
-            }, 80);
-        };
+        function makeCoupon(discount) {
+            // Формат: ELEPHANT-<DD>-<4 random>
+            const rand4 = Math.random().toString(36).slice(2, 6).toUpperCase();
+            const dd = String(discount).padStart(2, '0');
+            return `ELEPHANT-${dd}-${rand4}`;
+        }
+
+        // Декор: дождь зёрен
+        function spawnBeans() {
+            const w = game.clientWidth; const count = Math.floor(w / 42);
+            beansLayer.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const b = document.createElement('div'); b.className = 'bean';
+                b.style.left = Math.random() * 100 + '%';
+                const d = 3500 + Math.random() * 3500; b.style.animationDuration = d + 'ms';
+                b.style.opacity = 0.12 + Math.random() * 0.12;
+                beansLayer.appendChild(b);
+            }
+        }
+        window.addEventListener('resize', spawnBeans);
+        spawnBeans();
+
+        btnStart.addEventListener('click', startGame);
+        game.addEventListener('click', () => { if (!running) startGame(); });
+
+        // Предзагрузка картинки
+        const pre = new Image(); pre.src = IMG_SRC;
     </script>
 </body>
 
