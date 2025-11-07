@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Elephant Coffee — Розыгрыш</title>
+
+    <style>
+        :root {
+            --brand: #ffd7b3;
+            --bg: #fff8f1;
+            --text: #1e1e1e;
+            --btn: #222;
+            --card: #ffeedd;
+        }
+
+        body {
+            font-family: system-ui, Segoe UI, Roboto, Arial;
+            margin: 24px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 140px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            background: var(--btn);
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn.secondary {
+            background: #666
+        }
+
+        .logo {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--brand);
+            padding: 3px;
+            object-fit: cover;
+            box-shadow: 0 0 0 3px rgba(255, 215, 179, .4) inset;
+        }
+
+        .spin {
+            animation: spin 1s linear infinite
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg)
+            }
+
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .result {
+            display: none;
+            margin-top: 18px;
+            padding: 16px;
+            background: var(--card);
+            border-radius: 12px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>🎯 Розыгрыш Elephant Coffee</h2>
+    <textarea id="namesInput" placeholder="Имена участников (каждый с новой строки)"></textarea>
+
+    <div class="controls">
+        <label>
+            Победителей:
+            <input id="count" type="number" value="1" min="1"
+                style="width:70px;padding:6px;border-radius:8px;border:1px solid #ccc">
+        </label>
+
+        <button id="drawBtn" class="btn">
+            <img src="imageedit_4_5417855534.png" id="logoImg" class="logo" alt="logo">
+            Розыгрыш!
+        </button>
+
+        <button id="clearBtn" class="btn secondary">Очистить</button>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        function unique(arr) {
+            return Array.from(new Set(arr.map(x => x.trim()).filter(Boolean)));
+        }
+
+        function secureRandomInt(max) {
+            const buf = new Uint32Array(1);
+            const limit = Math.floor(0xFFFFFFFF / max) * max;
+            let x;
+            do {
+                crypto.getRandomValues(buf);
+                x = buf[0];
+            } while (x >= limit);
+            return x % max;
+        }
+
+        const input = document.getElementById('namesInput');
+        const resultEl = document.getElementById('result');
+        const drawBtn = document.getElementById('drawBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const logoImg = document.getElementById('logoImg');
+        const countEl = document.getElementById('count');
+
+        function setSpin(on) {
+            if (on) logoImg.classList.add('spin');
+            else logoImg.classList.remove('spin');
+        }
+
+        clearBtn.onclick = () => {
+            input.value = "";
+            resultEl.style.display = "none";
+        };
+
+        drawBtn.onclick = () => {
+            const list = unique(input.value.split("\n"));
+            const count = Math.max(1, Number(countEl.value) || 1);
+
+            if (list.length === 0) {
+                alert("Введите участников!");
+                return;
+            }
+
+            setSpin(true);
+            resultEl.style.display = "block";
+            resultEl.textContent = "Выбираю…";
+
+            let ticks = 0;
+            const maxTicks = 32;
+
+            const t = setInterval(() => {
+                const fake = list[secureRandomInt(list.length)];
+                resultEl.textContent = "🎰 " + fake;
+
+                if (++ticks >= maxTicks) {
+                    clearInterval(t);
+
+                    const winners = [];
+                    const pool = [...list];
+
+                    for (let i = 0; i < Math.min(count, pool.length); i++) {
+                        const index = secureRandomInt(pool.length);
+                        winners.push(pool[index]);
+                        pool.splice(index, 1);
+                    }
+
+                    resultEl.innerHTML =
+                        "<strong>Победители:</strong><br>" +
+                        winners.map((w, i) => `${i + 1}. ${w}`).join("<br>");
+
+                    setSpin(false);
+                }
+            }, 80);
+        };
+    </script>
+</body>
+
+</html>
