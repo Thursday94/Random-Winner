@@ -37,10 +37,10 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
+            /* фон игры теперь настраивается из CONFIG.ui.background */
             background: #0f0f0f;
         }
 
-        /* Pasek statusu */
         .safe {
             position: absolute;
             top: 0;
@@ -61,7 +61,6 @@
             padding: 6px 12px;
         }
 
-        /* Obiekty gry */
         .logo,
         .super,
         .bomb,
@@ -71,7 +70,6 @@
             top: -80px;
             width: 56px;
             height: 56px;
-            /* по умолчанию */
             object-fit: contain;
             cursor: pointer;
             user-select: none;
@@ -85,6 +83,12 @@
             box-shadow: 0 0 0 3px var(--gold), 0 0 14px var(--gold), 0 0 22px rgba(255, 215, 0, .35);
         }
 
+        .big {
+            filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55)) drop-shadow(0 0 14px rgba(255, 215, 179, .25));
+            width: 180px;
+            height: 180px;
+        }
+
         .bomb {
             font-size: 40px;
             display: flex;
@@ -93,20 +97,6 @@
             filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .65));
         }
 
-        .big {
-            width: 180px;
-            height: 180px;
-            filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55)) drop-shadow(0 0 14px rgba(255, 215, 179, .25));
-        }
-
-        .emoji {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-        }
-
-        /* Падение + лёгкое покачивание */
         @keyframes fall {
             to {
                 transform: translateY(calc(100vh + 140px)) rotate(var(--rot, 0deg));
@@ -127,13 +117,17 @@
             }
         }
 
-        /* назначаем одновременно падение и качание */
         .logo,
         .super {
             animation-name: fall, tilt;
             animation-duration: var(--fallDur, 2000ms), 2.2s;
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: 1, infinite;
+        }
+
+        .logo {
+            width: 96px;
+            height: 96px;
         }
 
         .big {
@@ -143,7 +137,6 @@
             animation-iteration-count: 1, infinite;
         }
 
-        /* Overlay start */
         .overlay {
             position: absolute;
             inset: 0;
@@ -168,7 +161,6 @@
             cursor: pointer;
         }
 
-        /* Arkusz końcowy */
         .sheet {
             position: absolute;
             left: 0;
@@ -182,16 +174,6 @@
             box-shadow: 0 -12px 30px rgba(0, 0, 0, .4);
         }
 
-        .coupon {
-            background: #1b1b1b;
-            border: 1px dashed #555;
-            padding: 8px 12px;
-            border-radius: 10px;
-            display: inline-flex;
-            gap: 8px;
-        }
-
-        /* Klik – pierścień + konfetti + label */
         .ring {
             position: absolute;
             width: 14px;
@@ -241,11 +223,11 @@
 
         .confetti {
             position: absolute;
-            width: 8px;
+            width: 10px;
             height: 12px;
             border-radius: 5px;
             pointer-events: none;
-            animation: confDrop 1s ease-out forwards;
+            animation: confDrop 1.2s ease-out forwards;
         }
 
         @keyframes confDrop {
@@ -255,7 +237,6 @@
             }
         }
 
-        /* Eksplozja */
         .boom {
             position: absolute;
             width: 30px;
@@ -281,7 +262,6 @@
             }
         }
 
-        /* Wstrząs ekranu + wiatr */
         .shake {
             animation: shake 450ms cubic-bezier(.36, .07, .19, .97);
         }
@@ -336,7 +316,6 @@
             }
         }
 
-        /* === КРИТ-эффекты === */
         .crit-flash {
             position: absolute;
             inset: 0;
@@ -358,8 +337,8 @@
 
         .crit-burst {
             position: absolute;
-            width: 22px;
-            height: 22px;
+            width: 42px;
+            height: 42px;
             border-radius: 999px;
             background: radial-gradient(circle, rgba(255, 215, 179, .95) 0%, rgba(255, 200, 120, .65) 45%, rgba(0, 0, 0, 0) 70%);
             box-shadow: 0 0 30px rgba(255, 200, 120, .9), 0 0 60px rgba(255, 160, 60, .7);
@@ -367,7 +346,7 @@
             opacity: .95;
             pointer-events: none;
             z-index: 8;
-            animation: critBurst .7s ease-out forwards;
+            animation: critBurst .9s ease-out forwards;
         }
 
         @keyframes critBurst {
@@ -407,15 +386,14 @@
             }
         }
 
-        /* === 🌀 Tornado === */
         .tornado {
-            width: 52px;
-            height: 52px;
+            width: 62px;
+            height: 62px;
             display: flex;
             align-items: center;
             justify-content: center;
             animation: fall var(--fallDur, 2200ms) linear forwards, spin 1.2s linear infinite, spawnFade .25s ease-out forwards;
-            filter: drop-shadow(0 0 12px rgba(150, 200, 255, .6));
+            filter: drop-shadow(0 0 22px rgba(150, 200, 255, .6));
         }
 
         @keyframes spin {
@@ -447,6 +425,16 @@
             box-shadow: 0 0 10px rgba(140, 190, 255, .7);
         }
 
+        .app::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+
         @keyframes twistOut {
             70% {
                 transform: translate(var(--dx), var(--dy)) scale(1.35);
@@ -464,13 +452,13 @@
             left: 0;
             top: 0;
             pointer-events: none;
-            width: 22px;
-            height: 22px;
+            width: 82px;
+            height: 82px;
             border-radius: 50%;
             background: radial-gradient(circle at 50% 50%, rgba(170, 210, 255, .25), rgba(170, 210, 255, 0) 65%);
-            box-shadow: 0 0 22px rgba(150, 200, 255, .45), inset 0 0 14px rgba(180, 220, 255, .35);
+            box-shadow: 0 0 42px rgba(150, 200, 255, .45), inset 0 0 14px rgba(180, 220, 255, .35);
             transform: translate(-50%, -50%) scale(.6) rotate(0deg);
-            animation: vortexSpin .6s ease-out forwards;
+            animation: vortexSpin .9s ease-out forwards;
         }
 
         @keyframes vortexSpin {
@@ -480,10 +468,43 @@
             }
 
             100% {
-                transform: translate(-50%, -50%) scale(3.0) rotate(260deg);
+                transform: translate(-50%, -50%) scale(3) rotate(260deg);
                 opacity: 0;
             }
         }
+
+        .text-main {
+    font-size: 20px;
+    line-height: 1.55;
+    color: #f3eee9; /* мягкий кофе-беж */
+    text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+    font-weight: 400;
+}
+
+.text-list li {
+    margin: 8px 0;
+    font-size: 18px;
+    color: #ffffffd8;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.text-strong {
+    font-weight: 700;
+    color: #ffd7b3;
+}
+
+.text-muted {
+    opacity: .88;
+}
+
+.text-title-small {
+    font-size: 17px;
+    color: #ffe5c7;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+
     </style>
 </head>
 
@@ -491,122 +512,185 @@
     <div class="app" id="app">
         <div class="safe">
             <div class="pill">Czas: <b id="time">15.0</b>s</div>
-            <div class="pill">Rabat: <b id="discount">0</b>%</div>
+            <div class="pill">Rabat: <b id="discount">0 zł</b></div>
         </div>
         <div class="overlay" id="startOv">
             <div class="modal">
-                <h1 style="font-size:28px;font-weight:900;">Złap Słonia</h1>
-                <p style="opacity:.9;line-height:1.4">
-                   • Słoń = <b>+0.2%</b><br> • Super Słoń = <b>+0.7%</b><br> • Duża paczka = <b>+0.8%</b><br>
-                    💣 Bomba = <b>−3%</b><br> • Zestaw trzech kaw = <b>−0.4%</b><br> 🎁🐘🔥
+                <h1 class="title-anim" style="
+                    font-size:32px;
+                    font-weight:900;
+                    background: linear-gradient(90deg,#ffd7b3,#ffe9c8);
+                    -webkit-background-clip: text;
+                    color: transparent;
+                    text-shadow:0 2px 8px rgba(0,0,0,.45);
+                ">
+                    Gra od Elephant Coffee — ZŁAP SŁONIA 🐘
+                </h1></br></br>
+                <p style="opacity:.9;line-height:1.4;font-size:18px;">
+                    Cześć! Gra jest w wersji testowej — nagrody będą aktywne po oficjalnym starcie 🫶
                 </p>
+                <p style="opacity:.9;line-height:1.4" id="rulesText"></p>
                 <button class="btn" id="start">Graj!</button>
             </div>
         </div>
     </div>
 
     <script>
-        /* ===========================
-              🐘 НАСТРОЙКИ (меняй)
-           =========================== */
+        /* =========================================================
+           ⚙️ CONFIG — всё меняем здесь
+           ========================================================= */
+        const CONFIG = {
+            game: {
+                duration: 15000,
+                spawnInterval: 105,
+                fallMin: 1800,
+                fallMax: 2800,
+                cap: 10,           // теперь это лимит в zł
+                chSwim: 0.35,
+                chEvade: 0.26
+            },
 
-        /* --- ВРЕМЯ РАУНДА --- */
-        const GAME_DURATION = 15000;      // длительность игры, мс
+            /* 🎨 Фон игры: цвет или полноценная CSS-строка
+               примеры:
+               '#0f0f0f'
+               'linear-gradient(180deg,#111,#000)'
+               'url(bg.jpg) center/cover no-repeat #000' */
+            ui: {
+                /*background: '#0f0f0f'*/
+                background: 'url(./background.jpg) center center / cover no-repeat #000'
+            },
 
-        /* --- СПАВН / ПАДЕНИЕ --- */
-        const SPAWN_INTERVAL = 120;       // интервал спавна (меньше → гуще)
-        const FALL_MIN = 1800;            // мин. время падения, мс
-        const FALL_MAX = 2800;            // макс. время падения, мс
-        const CH_SWIM = 0.35;             // шанс «плавания»
-        const CH_EVADE = 0.26;            // шанс увернуться при наведении/тапе
+            /* 🎵 Звуки */
+            sounds: {
+                enabled: true,
+                bg: { src: 'background.mp3', volume: 0.35 },
+                hit: { src: './hit.mp3', volume: 0.45, pool: 6 },
+                bomb: { src: 'bomb.mp3', volume: 0.7 },
+                tornado: { src: './tornado.mp3', volume: 0.6 }
+            },
 
-        /* --- ВЕРОЯТНОСТИ (в сумме ≤ 1) --- */
-        const CH_SUPER = 0.20;          // супер-слон (не более одного за раунд)
-        const CH_BIG = 0.1;          // большой слон
-        const CH_BOMB = 0.06;          // бомба
-        const CH_TORNADO = 0.05;          // торнадо
-        // остальное — обычные слоны
+            /* 🧩 Элементы + индивидуальные звуки */
+            elements: {
+                normal: {
+                    reward: 0.1,
+                    allowEvade: true,
+                    allowSwim: true,
+                    sound: { src: './basic.mp3', volume: 0.5, pool: 4 },
+                    items: [
+                        { src: 'basic.png', size: 56, note: 'Бразилия 250г', sound: { src: './pack250.mp3', volume: 0.55, pool: 3 } },
+                        { src: 'basic.png', size: 56, note: 'Balance 70/30' },
+                        { src: 'basic.png', size: 56, note: 'Brazil Santos' },
+                        { src: 'basic.png', size: 56, note: 'Alternative' }
+                    ],
+                    fallbackSvg:
+                        `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><rect x='5' y='5' width='46' height='46' rx='8' fill='#ffd7b3'/></svg>`
+                },
 
-        /* --- НАГРАДЫ / ШТРАФЫ --- */
-        const HIT_NORMAL = 0.2;           // +% за слона
-        const HIT_SUPER = 0.7;           // +% за супер-слона
-        const HIT_BIG = 0.5;           // +% за большого
-        const HIT_BOMB = -3.0;          // −% за бомбу
-        const HIT_TORNADO = -0.4;          // −% за торнадо
-        const MAX_RABAT = 10;            // предел скидки
+                super: {
+                    reward: 0.80, size: 56, src: './logo.png', chance: 0.30, maxPerGame: 3,
+                    allowEvade: true, allowSwim: true,
+                    sound: { src: './super.mp3', volume: 0.7 },
+                    fallbackSvg:
+                        `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><circle cx='28' cy='28' r='26' fill='#ffd7b3'/></svg>`
+                },
 
-        /* --- ВИБРАЦИИ --- */
-        const VIB_NORMAL = 18;
-        const VIB_SUPER = 26;
-        const VIB_BOMB_V = [80, 40, 120];
-        const VIB_TORNADO = [40, 20, 60];
+                big: {
+                    reward: 0.5, size: 185, src: './big.png', chance: 0.30, maxPerGame: 3,
+                    allowEvade: true, allowSwim: true,
+                    sound: { src: './hit.mp3', volume: 0.75 }
+                },
 
-        /* --- МУЗЫКА/ЗВУК --- */
-        const BG_VOLUME = 0.35;
-        const SRC_BG = "background.mp3";        // опционально
-        const SRC_HIT = "Elephant Cofee.mp3";    // короткий клик (50–150мс)
-        const SRC_BOMB = "bomb.mp3";              // опционально
+                bomb: {
+                    reward: -3.0, size: 65, chance: 0.25,
+                    icon: '💣', imageSrc: '', allowEvade: false, allowSwim: true,
+                    sound: { src: './bomb.mp3', volume: 0.7 }
+                },
 
-        /* --- ЛОГОТИП --- */
-        const LOGO_SRC = "logo.png";  // если есть файл
-        // безопасный фолбэк (SVG-кружок в цвете бренда)
-        const LOGO_FALLBACK = "data:image/svg+xml;utf8," + encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'>
-        <circle cx='28' cy='28' r='26' fill='#ffd7b3'/>
-      </svg>`
-        );
+                tornado: {
+                    reward: -0.4, size: 62, chance: 0.05, src: 'tornado.png',
+                    allowEvade: true, allowSwim: true,
+                    pull: { radius: 240, strength: 60, dur: 620 },
+                    vibr: [40, 20, 60],
+                    sound: { src: './tornado.mp3', volume: 0.2 }
+                }
+            },
 
-        /* ===========================
-                    CONST/STATE
-           =========================== */
-        const NORMAL = HIT_NORMAL, SUPER = HIT_SUPER, BOMB = HIT_BOMB, CAP = MAX_RABAT;
-        const BOMB_ICON = "💣";
-        const LOGO_BIG = "./big.png"; 
+            vib: { normal: 18, super: 26, bomb: [80, 40, 120] }
+        };
+        /* ========================= END CONFIG ========================= */
 
-        let running = false, discount = 0, superDone = false, bigCount = 0, t0 = 0, spawnTimer = null;
-        const app = document.getElementById('app'),
-            dEl = document.getElementById('discount'),
-            tEl = document.getElementById('time'),
-            startOv = document.getElementById('startOv');
+        /* ========= Утилиты ========= */
+        const app = document.getElementById('app');
+        const dEl = document.getElementById('discount');
+        const tEl = document.getElementById('time');
+        const startOv = document.getElementById('startOv');
 
-        const pct = v => v.toFixed(1) + '%';
-        const vibr = p => { if (navigator.vibrate) try { navigator.vibrate(p) } catch (e) { } };
+        // формат zł вместо процентов
+        const zl = v => new Intl.NumberFormat('pl-PL', {
+            style: 'currency',
+            currency: 'PLN',
+            maximumFractionDigits: (Math.abs(v) % 1 === 0 ? 0 : 2)
+        }).format(v);
+
+        const vibr = p => { if (!p) return; if (navigator.vibrate) try { navigator.vibrate(p) } catch (_) { } };
         const rand = (a, b) => Math.random() * (b - a) + a;
         const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
-        /* Фон: музыка */
-        const bgMusic = new Audio(SRC_BG); bgMusic.loop = true; bgMusic.volume = BG_VOLUME;
+        let running = false, discount = 0, superCount = 0, bigCount = 0, t0 = 0, spawnTimer = null;
 
-        /* Пул кликов по слону (без лагов) */
-        const HIT_POOL_SIZE = 6;
-        const hitPool = Array.from({ length: HIT_POOL_SIZE }, () => { const a = new Audio(SRC_HIT); a.preload = "auto"; a.volume = 0.45; return a; });
-        let hitIdx = 0;
-        function playHit() { const a = hitPool[hitIdx++ % HIT_POOL_SIZE]; try { a.currentTime = 0; a.play(); } catch (_) { } }
+        /* ========= Применяем фон из CONFIG ========= */
+        (function applyBackground() {
+            if (CONFIG?.ui?.background) app.style.background = CONFIG.ui.background;
+        })();
 
-        /* Бомба: одиночный звук */
-        let sndBomb = null; try { sndBomb = new Audio(SRC_BOMB); sndBomb.preload = "auto"; sndBomb.volume = 0.7; } catch (_) { sndBomb = null; }
-        function playBomb() { if (!sndBomb) return; try { sndBomb.currentTime = 0; sndBomb.play(); } catch (_) { } }
+        /* ========= Правила из CONFIG (в zł) ========= */
+        (function setRules() {
+            const E = CONFIG.elements;
+            const txt = [
+                `• Paczka kawy = <b>+${zl(E.normal.reward)}</b>`,
+                `• Super Słoń Logo = <b>+${zl(E.super.reward)}</b>`,
+                `• Paczka z Ręką = <b>+${zl(E.big.reward)}</b>`,
+                `💣 Bomba = <b>${zl(E.bomb.reward)}</b>`,
+                `• Zestaw trzech kaw = <b>${zl(E.tornado.reward)}</b>`,
+            ].join('<br>');
+            document.getElementById('rulesText').innerHTML = txt;
+        })();
 
-        /* Фабрика изображения слона с фолбэком */
-        function makeElephantImg() {
-            const img = new Image();
-            img.decoding = 'async';
-            img.loading = 'eager';
-            img.src = LOGO_SRC;
-            img.onerror = () => { img.onerror = null; img.src = LOGO_FALLBACK; };
-            return img;
+        /* ========= Аудио ========= */
+        const SND = {}; let __idx = 0; let bgMusic = null;
+        function regSound(key, cfg) {
+            if (!cfg || !cfg.src) return;
+            const { src, volume = 1, pool = 1 } = cfg;
+            if (pool > 1) { SND[key] = Array.from({ length: pool }, () => { const a = new Audio(src); a.volume = volume; a.preload = 'auto'; return a; }); }
+            else { const a = new Audio(src); a.volume = volume; a.preload = 'auto'; SND[key] = a; }
         }
+        function play(key) {
+            if (!CONFIG.sounds.enabled) return; const s = SND[key]; if (!s) return;
+            if (Array.isArray(s)) { const a = s[(__idx++ % s.length)]; try { a.currentTime = 0; a.play(); } catch { } }
+            else { try { s.currentTime = 0; s.play(); } catch { } }
+        }
+        (function setupAudio() {
+            if (!CONFIG.sounds.enabled) return;
+            const SS = CONFIG.sounds;
+            if (SS.bg && SS.bg.src) { bgMusic = new Audio(SS.bg.src); bgMusic.loop = true; bgMusic.volume = SS.bg.volume ?? 1; bgMusic.preload = 'auto'; }
+            regSound('hit', SS.hit); regSound('bomb', SS.bomb); regSound('tornado', SS.tornado);
+            const E = CONFIG.elements;
+            regSound('el.normal', E.normal.sound);
+            regSound('el.super', E.super.sound);
+            regSound('el.big', E.big.sound);
+            regSound('el.bomb', E.bomb.sound);
+            regSound('el.tornado', E.tornado.sound);
+            (E.normal.items || []).forEach((it, i) => regSound(`el.normal.${i}`, it.sound));
+        })();
 
-        /* UI эффекты */
+        /* ========= UI-эффекты ========= */
         function ring(x, y) { const r = document.createElement('div'); r.className = 'ring'; r.style.left = x + 'px'; r.style.top = y + 'px'; app.appendChild(r); setTimeout(() => r.remove(), 520); }
-        function confetti(x, y, amount = 14) {
+        function confetti(x, y, n = 14) {
             const colors = ['#ffd7b3', '#ffd700', '#ffa84d', '#ffffff'];
-            for (let i = 0; i < amount; i++) {
-                const c = document.createElement('div'); c.className = 'confetti';
-                c.style.left = x + 'px'; c.style.top = y + 'px'; c.style.background = colors[Math.floor(Math.random() * colors.length)];
-                const dx = (Math.random() < 0.5 ? -1 : 1) * (20 + Math.random() * 60);
-                const dy = -(20 + Math.random() * 60);
-                const rot = (Math.random() < 0.5 ? -1 : 1) * (120 + Math.random() * 180) + 'deg';
+            for (let i = 0; i < n; i++) {
+                const c = document.createElement('div'); c.className = 'confetti'; c.style.left = x + 'px'; c.style.top = y + 'px';
+                c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                const dx = (Math.random() < .5 ? -1 : 1) * (20 + Math.random() * 60), dy = -(20 + Math.random() * 60), rot = (Math.random() < .5 ? -1 : 1) * (120 + Math.random() * 180) + 'deg';
                 c.style.setProperty('--dx', dx + 'px'); c.style.setProperty('--dy', dy + 'px'); c.style.setProperty('--rot', rot);
                 app.appendChild(c); setTimeout(() => c.remove(), 1000);
             }
@@ -617,217 +701,228 @@
         function shake() { app.classList.remove('shake'); void app.offsetWidth; app.classList.add('shake'); }
         function windGust() { app.classList.remove('wind'); void app.offsetWidth; app.classList.add('wind'); }
 
-        /* Крит-эффекты для супер-слона */
         const CRIT_CONFETTI = 28, CRIT_RAYS = 10, CRIT_VIB = 40;
         function confettiRich(x, y, amount = 24) {
             const colors = ['#ffd7b3', '#ffd700', '#ffa84d', '#fff5da', '#ffffff'];
             for (let i = 0; i < amount; i++) {
-                const c = document.createElement('div'); c.className = 'confetti';
-                c.style.left = x + 'px'; c.style.top = y + 'px'; c.style.background = colors[Math.floor(Math.random() * colors.length)];
-                const dx = (Math.random() < 0.5 ? -1 : 1) * (30 + Math.random() * 80);
-                const dy = -(30 + Math.random() * 80);
-                const rot = (Math.random() < 0.5 ? -1 : 1) * (140 + Math.random() * 220) + 'deg';
+                const c = document.createElement('div'); c.className = 'confetti'; c.style.left = x + 'px'; c.style.top = y + 'px';
+                c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                const dx = (Math.random() < .5 ? -1 : 1) * (30 + Math.random() * 80), dy = -(30 + Math.random() * 80), rot = (Math.random() < .5 ? -1 : 1) * (140 + Math.random() * 220) + 'deg';
                 c.style.setProperty('--dx', dx + 'px'); c.style.setProperty('--dy', dy + 'px'); c.style.setProperty('--rot', rot);
                 app.appendChild(c); setTimeout(() => c.remove(), 1000);
             }
         }
         function critCelebrate(x, y, text) {
-            ring(x, y); confettiRich(x, y, CRIT_CONFETTI); floatLabel(x, y, text || ('+' + pct(SUPER)));
+            ring(x, y); confettiRich(x, y, CRIT_CONFETTI); floatLabel(x, y, text);
             const b = document.createElement('div'); b.className = 'crit-burst'; b.style.left = x + 'px'; b.style.top = y + 'px'; app.appendChild(b); setTimeout(() => b.remove(), 720);
             for (let i = 0; i < CRIT_RAYS; i++) {
                 const r = document.createElement('div'); r.className = 'crit-ray'; r.style.left = x + 'px'; r.style.top = y + 'px';
-                const base = (360 / CRIT_RAYS) * i, jitter = (Math.random() * 18) - 9; r.style.setProperty('--rot', (base + jitter) + 'deg');
-                app.appendChild(r); setTimeout(() => r.remove(), 720);
+                const base = (360 / CRIT_RAYS) * i, jitter = (Math.random() * 18) - 9; r.style.setProperty('--rot', (base + jitter) + 'deg'); app.appendChild(r); setTimeout(() => r.remove(), 720);
             }
             const f = document.createElement('div'); f.className = 'crit-flash'; app.appendChild(f); setTimeout(() => f.remove(), 360);
         }
-
-        /* 🌀 Вихрь эффекты */
         function twistBurst(x, y, n = 8) {
             for (let i = 0; i < n; i++) {
-                const t = document.createElement('div'); t.className = 'twist';
-                t.style.left = x + 'px'; t.style.top = y + 'px';
-                const angle = (Math.PI * 2 / n) * i + (Math.random() * 0.6 - 0.3);
-                const r = 26 + Math.random() * 24;
-                t.style.setProperty('--dx', (Math.cos(angle) * r) + 'px');
-                t.style.setProperty('--dy', (Math.sin(angle) * r) + 'px');
+                const t = document.createElement('div'); t.className = 'twist'; t.style.left = x + 'px'; t.style.top = y + 'px';
+                const ang = (Math.PI * 2 / n) * i + (Math.random() * 0.6 - 0.3), r = 26 + Math.random() * 24;
+                t.style.setProperty('--dx', (Math.cos(ang) * r) + 'px'); t.style.setProperty('--dy', (Math.sin(ang) * r) + 'px');
                 app.appendChild(t); setTimeout(() => t.remove(), 560);
             }
         }
         function vortex(x, y) { const v = document.createElement('div'); v.className = 'vortex'; v.style.left = x + 'px'; v.style.top = y + 'px'; app.appendChild(v); setTimeout(() => v.remove(), 620); }
 
-        /* Счёт/лимит */
-        function update() { if (discount < 0) discount = 0; if (discount > CAP) discount = CAP; dEl.textContent = discount.toFixed(1); }
+        /* ========= Счёт ========= */
+        function update() {
+            const cap = CONFIG.game.cap;
+            if (discount < 0) discount = 0;
+            if (discount > cap) discount = cap;
+            dEl.textContent = zl(discount);
+        }
 
-        /* Подготовка падения */
-        function fallSetup(el, opts = {}) {
-            const { allowEvade = true, allowSwim = true, size = 56 } = opts;
+        /* ========= Падение ========= */
+        function fallSetup(el, { allowEvade = true, allowSwim = true, size = 56 } = {}) {
+            const G = CONFIG.game;
             el.style.left = rand(0, app.clientWidth - size) + 'px';
-
-            if (Math.random() < 0.25) {
-                el.style.setProperty('--rot', (Math.random() < 0.5 ? -1 : 1) * rand(120, 360) + 'deg');
-            }
-
-            const dur = rand(FALL_MIN, FALL_MAX);
-            el.style.top = '-80px';
-            el.style.setProperty('--fallDur', dur + 'ms');
-            el.style.animation = 'fall ' + dur + 'ms linear forwards';
+            if (Math.random() < 0.25) el.style.setProperty('--rot', (Math.random() < 0.5 ? -1 : 1) * rand(120, 360) + 'deg');
+            const dur = rand(G.fallMin, G.fallMax);
+            el.style.top = '-80px'; el.style.setProperty('--fallDur', dur + 'ms'); el.style.animation = 'fall ' + dur + 'ms linear forwards';
             el.addEventListener('animationend', () => el.remove(), { once: true });
 
-            if (allowSwim && Math.random() < CH_SWIM) {
+            if (allowSwim && Math.random() < G.chSwim) {
                 const amp = 16 + Math.random() * 20, freq = 0.5 + Math.random() * 0.7, vel = (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 20);
                 const x0 = parseFloat(el.style.left) || 0, start = performance.now();
                 (function swim() {
-                    if (!el.isConnected) return;
-                    const t = (performance.now() - start) / 1000;
-                    const nx = x0 + vel * t + amp * Math.sin(2 * Math.PI * freq * t);
-                    el.style.left = clamp(nx, 0, app.clientWidth - size) + 'px';
-                    el.__swim = requestAnimationFrame(swim);
+                    if (!el.isConnected) return; const t = (performance.now() - start) / 1000;
+                    const nx = x0 + vel * t + amp * Math.sin(2 * Math.PI * freq * t); el.style.left = clamp(nx, 0, app.clientWidth - size) + 'px'; el.__swim = requestAnimationFrame(swim);
                 })();
                 el.addEventListener('animationend', () => cancelAnimationFrame(el.__swim || 0), { once: true });
             }
-
             if (allowEvade) {
-                const tryEvade = () => {
-                    if (Math.random() < CH_EVADE) {
-                        vibr(12);
-                        const x = (parseFloat(el.style.left) || 0) + (Math.random() < 0.5 ? -1 : 1) * rand(110, 180);
-                        el.style.left = clamp(x, 0, app.clientWidth - size) + 'px';
-                    }
-                };
-                el.addEventListener('pointerdown', tryEvade);
-                el.addEventListener('pointerenter', tryEvade);
+                const tryEvade = () => { if (Math.random() < G.chEvade) { vibr(12); const x = (parseFloat(el.style.left) || 0) + (Math.random() < 0.5 ? -1 : 1) * rand(110, 180); el.style.left = clamp(x, 0, app.clientWidth - size) + 'px'; } };
+                el.addEventListener('pointerdown', tryEvade); el.addEventListener('pointerenter', tryEvade);
             }
-
             app.appendChild(el);
         }
 
-    /* Спавн кого? */
-    function spawn() {
-        if (!running) return;
-        const r = Math.random();
+        /* ========= Фабрики ========= */
+        const svgToDataUri = svg => "data:image/svg+xml;utf8," + encodeURIComponent(svg);
 
-        // супер-слон (только один)
-        if (!superDone && r < CH_SUPER) {
-            superDone = true;
-            spawnSuper();
-            return;
+        function makeNormal() {
+            const N = CONFIG.elements.normal;
+            const idx = Math.floor(Math.random() * N.items.length);
+            const pick = N.items[idx] || { src: '', size: 56 };
+            const img = new Image(); img.decoding = 'async'; img.loading = 'eager';
+            img.src = pick.src || svgToDataUri(N.fallbackSvg);
+            img.onerror = () => { img.onerror = null; img.src = svgToDataUri(N.fallbackSvg); };
+            const key = SND[`el.normal.${idx}`] ? `el.normal.${idx}` : (SND['el.normal'] ? 'el.normal' : 'hit');
+            return { el: img, size: pick.size || 56, reward: N.reward, allowEvade: N.allowEvade, allowSwim: N.allowSwim, soundKey: key };
+        }
+        function makeSuper() {
+            const S = CONFIG.elements.super;
+            const img = new Image(); img.decoding = 'async'; img.loading = 'eager';
+            img.src = S.src || svgToDataUri(S.fallbackSvg);
+            img.onerror = () => { img.onerror = null; img.src = svgToDataUri(S.fallbackSvg); };
+            const key = SND['el.super'] ? 'el.super' : 'hit';
+            return { el: img, size: S.size, reward: S.reward, allowEvade: S.allowEvade, allowSwim: S.allowSwim, soundKey: key };
+        }
+        function makeBig() {
+            const B = CONFIG.elements.big;
+            const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = B.src || '';
+            const key = SND['el.big'] ? 'el.big' : 'hit';
+            return { el: img, size: B.size, reward: B.reward, allowEvade: B.allowEvade, allowSwim: B.allowSwim, soundKey: key };
+        }
+        function makeBomb() {
+            const B = CONFIG.elements.bomb; let node, isImage = false;
+            if (B.imageSrc) { const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = B.imageSrc; node = img; isImage = true; }
+            else { const div = document.createElement('div'); div.className = 'bomb'; div.textContent = B.icon || '💣'; node = div; }
+            const key = SND['el.bomb'] ? 'el.bomb' : 'bomb';
+            return { el: node, size: B.size, reward: B.reward, allowEvade: B.allowEvade, allowSwim: B.allowSwim, isImage, soundKey: key };
+        }
+        function makeTornado() {
+            const T = CONFIG.elements.tornado;
+            const div = document.createElement('div'); div.className = 'tornado';
+            if (T.src) { const img = new Image(); img.src = T.src; img.style.width = (T.size - 8) + 'px'; img.style.height = (T.size - 8) + 'px'; img.style.pointerEvents = 'none'; img.onerror = () => img.remove(); div.appendChild(img); }
+            const key = SND['el.tornado'] ? 'el.tornado' : 'tornado';
+            return { el: div, size: T.size, reward: T.reward, allowEvade: T.allowEvade, allowSwim: T.allowSwim, soundKey: key };
         }
 
-        // ——— БОЛЬШОЙ СЛОН (Максимум 3 за игру) ———
-        if (bigCount < 5 && r < CH_SUPER + CH_BIG) {
-            bigCount++;
-            spawnBig();
-            return;
-        }
-        // ————————————————————————————————
+        /* ========= Планирование спец-объектов по времени ========= */
+        let tickNo = 0;            // текущий номер тика спавна
+        let superTick = null;      // когда показать супер-слона
+        let bigTicks = new Set();  // когда показывать big
+        const randi = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 
-        // бомба
-        if (r < CH_SUPER + CH_BIG + CH_BOMB) {
-            spawnBomb();
-            return;
-        }
+        function planSpecials() {
+            const totalTicks = Math.floor(CONFIG.game.duration / CONFIG.game.spawnInterval);
 
-        // торнадо
-        if (r < CH_SUPER + CH_BIG + CH_BOMB + CH_TORNADO) {
-            spawnTornado();
-            return;
-        }
+            // окна появления (доли длительности раунда)
+            const superWin = [0.35, 0.85];
+            const bigWin = [0.15, 0.95];
+            const minGapMs = 2500; // минимальный зазор между бигами/супером
+            const minGapTicks = Math.ceil(minGapMs / CONFIG.game.spawnInterval);
 
-        // обычный слон
-        spawnNormal();
-    }
+            superTick = randi(
+                Math.floor(totalTicks * superWin[0]),
+                Math.floor(totalTicks * superWin[1])
+            );
 
+            bigTicks.clear();
+            const want = CONFIG.elements.big.maxPerGame || 0;
+            const minT = Math.floor(totalTicks * bigWin[0]);
+            const maxT = Math.floor(totalTicks * bigWin[1]);
 
-        /* Сущности */
-        function spawnNormal() {
-            const el = makeElephantImg(); el.className = 'logo';
-            fallSetup(el, { allowEvade: true, allowSwim: true, size: 56 });
-            el.addEventListener('pointerdown', e => { playHit(); vibr(VIB_NORMAL); onHit(NORMAL, pct(NORMAL))(e); }, { once: true });
-        }
-
-
-      function spawnBig() {
-            const el = makeBigElephantImg();
-            el.className = 'big';
-
-            fallSetup(el, { allowEvade: true, allowSwim: true, size: 90 });
-
-            el.addEventListener('pointerdown', e => {
-                playHit();
-                vibr(VIB_NORMAL + 10);
-                onHit(HIT_BIG, pct(HIT_BIG))(e);
-            }, { once: true });
+            while (bigTicks.size < want && (maxT - minT + 1) > 0) {
+                const t = randi(minT, maxT);
+                let ok = Math.abs(t - superTick) >= minGapTicks;
+                if (ok) for (const bt of bigTicks) { if (Math.abs(t - bt) < minGapTicks) { ok = false; break; } }
+                if (ok) bigTicks.add(t);
+            }
         }
 
+        /* ========= Спавн ========= */
+        function spawn() {
+            if (!running) return;
+            const E = CONFIG.elements;
 
-        function makeBigElephantImg() {
-                const el = new Image();
-                el.src = LOGO_BIG;     // ← отдельная картинка
-                el.decoding = "async";
-                el.loading = "eager";
-                return el;
+            // номер текущего тика
+            const cur = tickNo++;
+
+            // спец-объекты по расписанию
+            if (E.super.maxPerGame && superCount < (E.super.maxPerGame || 1) && cur === superTick) {
+                superCount++; spawnSuper(); return;
+            }
+            if (bigTicks.size && bigTicks.has(cur) && bigCount < (E.big.maxPerGame || 0)) {
+                bigCount++; spawnBig(); return;
             }
 
+            // остальное — вероятностно
+            const r = Math.random();
+            if (r < (E.bomb.chance || 0)) { spawnBomb(); return; }
+            if (r < (E.bomb.chance || 0) + (E.tornado.chance || 0)) { spawnTornado(); return; }
+            spawnNormal();
+        }
 
+        /* ========= Сущности ========= */
+        function spawnNormal() {
+            const n = makeNormal(); n.el.className = 'logo';
+            fallSetup(n.el, { allowEvade: n.allowEvade, allowSwim: n.allowSwim, size: n.size });
+            n.el.addEventListener('pointerdown', e => {
+                play(n.soundKey || 'hit'); vibr(CONFIG.vib.normal);
+                onHit(n.reward, zl(n.reward))(e);
+            }, { once: true });
+        }
         function spawnSuper() {
-            const el = makeElephantImg(); el.className = 'super';
-            fallSetup(el, { allowEvade: true, allowSwim: true, size: 56 });
-            el.addEventListener('pointerdown', e => {
-                playHit(); vibr(VIB_SUPER + CRIT_VIB);
-                onHit(SUPER, pct(SUPER))(e);
-                critCelebrate(e.clientX, e.clientY, '+' + pct(SUPER));
+            const s = makeSuper(); s.el.className = 'super';
+            fallSetup(s.el, { allowEvade: s.allowEvade, allowSwim: s.allowSwim, size: s.size });
+            s.el.addEventListener('pointerdown', e => {
+                play(s.soundKey || 'hit'); vibr(CONFIG.vib.super + CRIT_VIB);
+                onHit(s.reward, zl(s.reward))(e);
+                critCelebrate(e.clientX, e.clientY, '+' + zl(s.reward));
             }, { once: true });
         }
-
+        function spawnBig() {
+            const b = makeBig(); b.el.className = 'big';
+            fallSetup(b.el, { allowEvade: b.allowEvade, allowSwim: b.allowSwim, size: b.size });
+            b.el.addEventListener('pointerdown', e => {
+                play(b.soundKey || 'hit'); vibr(CONFIG.vib.normal + 10);
+                onHit(b.reward, zl(b.reward))(e);
+            }, { once: true });
+        }
         function spawnBomb() {
-            const el = document.createElement('div'); el.className = 'bomb'; el.textContent = BOMB_ICON;
-            fallSetup(el, { allowEvade: false, allowSwim: true, size: 56 });
-            el.addEventListener('pointerdown', e => { playBomb(); vibr(VIB_BOMB_V); boom(e.clientX, e.clientY); shake(); onHit(BOMB, '')(e); }, { once: true });
+            const b = makeBomb(); if (!b.isImage) b.el.classList.add('bomb');
+            fallSetup(b.el, { allowEvade: b.allowEvade, allowSwim: b.allowSwim, size: b.size });
+            b.el.addEventListener('pointerdown', e => {
+                play(b.soundKey || 'bomb'); vibr(CONFIG.vib.bomb);
+                boom(e.clientX, e.clientY); shake(); onHit(b.reward, '')(e);
+            }, { once: true });
         }
-
         function spawnTornado() {
-            const el = document.createElement('div'); el.className = 'tornado';
-            // Картинка торнадо (если файла нет — просто пустая крутящаяся «аура»)
-            const img = new Image(); img.src = 'tornado.png'; img.style.width = '54px'; img.style.height = '54px'; img.style.pointerEvents = 'none';
-            img.onerror = () => { img.remove(); }; // тихий фэйл
-            el.appendChild(img);
-
-            fallSetup(el, { allowEvade: true, allowSwim: true, size: 52 });
-            el.addEventListener('pointerdown', e => {
-                vibr(VIB_TORNADO);
-                twistBurst(e.clientX, e.clientY, 10);
-                vortex(e.clientX, e.clientY);
-                windGust();
-                pullNearby(e.clientX, e.clientY, { radius: 240, strength: 60, dur: 420 });
-                onHit(HIT_TORNADO, '')(e);
+            const t = makeTornado(); t.el.className = 'tornado';
+            fallSetup(t.el, { allowEvade: t.allowEvade, allowSwim: t.allowSwim, size: t.size });
+            t.el.addEventListener('pointerdown', e => {
+                play(t.soundKey || 'tornado'); vibr(CONFIG.elements.tornado.vibr);
+                twistBurst(e.clientX, e.clientY, 10); vortex(e.clientX, e.clientY); windGust();
+                pullNearby(e.clientX, e.clientY, CONFIG.elements.tornado.pull);
+                onHit(t.reward, '')(e);
             }, { once: true });
         }
 
-        /* Притягивание ближайших слонов к точке (x,y) */
+        /* === Притяжение к торнадо === */
         function pullNearby(x, y, { radius = 220, strength = 120, dur = 360 } = {}) {
             const start = performance.now();
             const elems = Array.from(document.querySelectorAll('.logo,.super,.big'));
-            const meta = elems.map(el => {
-                const r = el.getBoundingClientRect();
-                return { el, w: r.width, h: r.height };
-            });
-
+            const meta = elems.map(el => { const r = el.getBoundingClientRect(); return { el, w: r.width, h: r.height }; });
             function step(now) {
                 const t = Math.min(1, (now - start) / dur);
-                const ease = t < .5 ? (2 * t * t) : (-1 + (4 - 2 * t) * t); // ease-in-out
-                meta.forEach(({ el, w, h }) => {
+                const ease = t < .5 ? (2 * t * t) : (-1 + (4 - 2 * t) * t);
+                meta.forEach(({ el, w }) => {
                     if (!el.isConnected) return;
-                    const r = el.getBoundingClientRect();
-                    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-                    const dx = x - cx, dy = y - cy, dist = Math.hypot(dx, dy);
-                    if (dist > radius) return;
-
+                    const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+                    const dx = x - cx, dy = y - cy, dist = Math.hypot(dx, dy); if (dist > radius) return;
                     const k = (1 - dist / radius) * strength * ease;
                     const curLeft = parseFloat(el.style.left) || 0;
                     const nx = curLeft + (dx / (dist || 1)) * k;
                     el.style.left = clamp(nx, 0, app.clientWidth - w) + 'px';
-
                     const curRot = parseFloat(getComputedStyle(el).getPropertyValue('--rot')) || 0;
                     el.style.setProperty('--rot', (curRot + (dx > 0 ? 8 : -8) * ease) + 'deg');
                 });
@@ -836,68 +931,55 @@
             requestAnimationFrame(step);
         }
 
-        /* Обработка попадания */
+        /* === Попадание === */
         function onHit(delta, label) {
             return e => {
                 if (!running) return;
                 discount += delta; update();
-                const p = e ? { x: e.clientX, y: e.clientY } : { x: 0, y: 0 };
+                const p = { x: e?.clientX || 0, y: e?.clientY || 0 };
                 if (delta > 0) celebrate(p.x, p.y, '+' + label);
                 e.currentTarget.remove();
             };
         }
 
-        /* Таймер и раунды */
+        /* === Таймер/раунд === */
         function tick(now) {
-            const left = (GAME_DURATION - (now - t0)) / 1000;
+            const left = (CONFIG.game.duration - (now - t0)) / 1000;
             tEl.textContent = Math.max(0, left).toFixed(1);
             if (left > 0) requestAnimationFrame(tick); else endGame();
         }
-
         function clearField() {
             document.querySelectorAll('.logo,.super,.big,.tornado,.bomb,.sheet,.ring,.confetti,.float,.boom,.crit-flash,.crit-burst,.crit-ray,.twist,.vortex').forEach(n => n.remove());
         }
-
         function startGame() {
             running = false; if (spawnTimer) clearInterval(spawnTimer);
-            clearField(); discount = 0; superDone = false; bigCount = 0; update();
+            clearField(); discount = 0; superCount = 0; bigCount = 0; update();
             startOv.style.display = 'none';
 
+            // план на раунд
+            tickNo = 0;
+            planSpecials();
+
             running = true; t0 = performance.now();
-            spawnTimer = setInterval(spawn, SPAWN_INTERVAL);
+            spawnTimer = setInterval(spawn, CONFIG.game.spawnInterval);
+            if (CONFIG.sounds.enabled && bgMusic) { try { bgMusic.currentTime = 0; bgMusic.play(); } catch { } }
             requestAnimationFrame(tick);
         }
-
         function endGame() {
             running = false; clearInterval(spawnTimer);
             const final = Math.round(discount);
-            const code = 'ELEPHANT-' + String(final).padStart(2, '0') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
             const s = document.createElement('div'); s.className = 'sheet';
             s.innerHTML = '<div style="text-align:center;">'
                 + '<h2>Koniec!</h2>'
-                + '<p>Twój rabat: <b>' + final + '%</b></p>'
-                + '<div class="coupon"><span>' + code + '</span> <button class="btn" id="copy">Kopiuj</button></div>'
+                + '<p>Twój rabat: <b>' + zl(final) + '</b></p>'
                 + '<p style="opacity:.9;margin-top:12px">Zrób zrzut ekranu i <b>wyślij nam w wiadomości</b>.</p>'
                 + '<br><button class="btn" id="again">Jeszcze raz</button>'
                 + '</div>';
             document.body.appendChild(s);
-
-            const copy = s.querySelector('#copy');
-            copy.onclick = async () => {
-                try { await navigator.clipboard.writeText(code); alert('Skopiowano ✅'); }
-                catch {
-                    const ta = document.createElement('textarea'); ta.value = code; document.body.appendChild(ta);
-                    ta.select(); document.execCommand('copy'); ta.remove(); alert('Skopiowano ✅');
-                }
-            };
             s.querySelector('#again').onclick = () => { s.remove(); startOv.style.display = 'flex'; };
         }
 
-        /* Старт */
-        document.getElementById('start').addEventListener('pointerdown', () => {
-            bgMusic.currentTime = 0; bgMusic.play().catch(() => { });
-            startGame();
-        });
+        document.getElementById('start').addEventListener('pointerdown', startGame);
     </script>
 </body>
 
