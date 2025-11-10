@@ -429,11 +429,10 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.55);
+            background: rgba(0, 0, 0, 0.55);
             pointer-events: none;
             z-index: 0;
         }
-
 
         @keyframes twistOut {
             70% {
@@ -474,37 +473,209 @@
         }
 
         .text-main {
-    font-size: 20px;
-    line-height: 1.55;
-    color: #f3eee9; /* мягкий кофе-беж */
-    text-shadow: 0 1px 4px rgba(0,0,0,0.45);
-    font-weight: 400;
-}
+            font-size: 20px;
+            line-height: 1.55;
+            color: #f3eee9;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+            font-weight: 400;
+        }
 
-.text-list li {
-    margin: 8px 0;
-    font-size: 18px;
-    color: #ffffffd8;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-}
+        .text-list li {
+            margin: 8px 0;
+            font-size: 18px;
+            color: #ffffffd8;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
 
-.text-strong {
-    font-weight: 700;
-    color: #ffd7b3;
-}
+        .text-strong {
+            font-weight: 700;
+            color: #ffd7b3;
+        }
 
-.text-muted {
-    opacity: .88;
-}
+        .text-muted {
+            opacity: .88;
+        }
 
-.text-title-small {
-    font-size: 17px;
-    color: #ffe5c7;
-    font-weight: 600;
-    margin-bottom: 6px;
-    text-shadow: 0 1px 4px rgba(0,0,0,.5);
-}
+        .text-title-small {
+            font-size: 17px;
+            color: #ffe5c7;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, .5);
+        }
 
+        /* --- ROMA (твой «супер-объект») — оранжевая подсветка и 84px --- */
+        .roma {
+            position: absolute;
+            top: -80px;
+            width: 84px;
+            height: 84px;
+            object-fit: contain;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+            border-radius: 50%;
+            /* тёплая оранжевая подсветка */
+            filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55)) drop-shadow(0 0 22px rgba(255, 168, 77, .45));
+            box-shadow: 0 0 0 3px #ffa84d, 0 0 16px #ffa84d, 0 0 28px rgba(255, 168, 77, .55);
+            animation-name: fall, tilt;
+            animation-duration: var(--fallDur, 2000ms), 2.2s;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: 1, infinite;
+        }
+
+        /* --- SLOWMO: замедляем падение у всех объектов --- */
+        .app.slowmo .logo,
+        .app.slowmo .super,
+        .app.slowmo .big,
+        .app.slowmo .tornado,
+        .app.slowmo .bomb,
+        .app.slowmo .roma {
+            animation-duration: calc(var(--fallDur, 2000ms) * 2.8), 2.2s !important;
+        }
+
+        /* затемнение поверх сцены в слоумо */
+        .app.slowmo::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, .22);
+            pointer-events: none;
+            z-index: 9;
+        }
+
+        /* === PRISM FX для ROMA (Новый эффект) === */
+        .prism-core {
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-50%, -50%) scale(.6);
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, 0) 55%),
+                conic-gradient(from 0deg, #ffd7b3, #ffd700, #ff8a00, #ff4d4d, #b36bff, #66d9ff, #ffd7b3);
+            box-shadow: 0 0 24px rgba(255, 215, 179, .9), 0 0 60px rgba(255, 215, 0, .45);
+            pointer-events: none;
+            z-index: 9;
+            animation: prismPulse .9s ease-out forwards, prismSpin 1.4s linear;
+        }
+
+        @keyframes prismPulse {
+            60% {
+                transform: translate(-50%, -50%) scale(1.4);
+                opacity: .95;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        @keyframes prismSpin {
+            to {
+                filter: hue-rotate(360deg)
+            }
+        }
+
+        .prism-shard {
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 18px;
+            border-radius: 2px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0));
+            box-shadow: 0 0 14px rgba(255, 255, 255, .65);
+            pointer-events: none;
+            z-index: 9;
+            animation: shardFly .9s ease-out forwards;
+        }
+
+        @keyframes shardFly {
+            75% {
+                transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1.2);
+                opacity: .9;
+            }
+
+            100% {
+                transform: translate(calc(var(--dx)*1.25), calc(var(--dy)*1.25)) rotate(var(--rot)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .prism-halo {
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-50%, -50%) scale(.5);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 215, 179, .9);
+            box-shadow: 0 0 30px rgba(255, 215, 179, .8), 0 0 60px rgba(255, 215, 0, .35);
+            pointer-events: none;
+            z-index: 8;
+            animation: haloExpand .8s ease-out forwards;
+        }
+
+        @keyframes haloExpand {
+            70% {
+                transform: translate(-50%, -50%) scale(2.4);
+                opacity: .8;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2.6);
+                opacity: 0;
+            }
+        }
+
+        .prism-trail {
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff, rgba(255, 255, 255, 0));
+            box-shadow: 0 0 10px #fff;
+            pointer-events: none;
+            z-index: 8;
+            animation: trailFade .6s ease-out forwards;
+        }
+
+        @keyframes trailFade {
+            100% {
+                transform: translate(var(--dx), var(--dy));
+                opacity: 0;
+            }
+        }
+
+        /* лёгкая виньетка при слоумо */
+        .app.slowmo .freeze-vignette {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .28) 100%);
+            animation: vignetteBlink .25s ease-out;
+        }
+
+        @keyframes vignetteBlink {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
     </style>
 </head>
 
@@ -550,11 +721,7 @@
                 chEvade: 0.26
             },
 
-            /* 🎨 Фон игры: цвет или полноценная CSS-строка
-               примеры:
-               '#0f0f0f'
-               'linear-gradient(180deg,#111,#000)'
-               'url(bg.jpg) center/cover no-repeat #000' */
+            /* 🎨 Фон игры */
             ui: {
                 /*background: '#0f0f0f'*/
                 background: 'url(./background.jpg) center center / cover no-repeat #000'
@@ -569,7 +736,7 @@
                 tornado: { src: './tornado.mp3', volume: 0.6 }
             },
 
-            /* 🧩 Элементы + индивидуальные звуки */
+            /* 🧩 Элементы + звуки */
             elements: {
                 normal: {
                     reward: 0.1,
@@ -612,6 +779,23 @@
                     pull: { radius: 240, strength: 60, dur: 620 },
                     vibr: [40, 20, 60],
                     sound: { src: './tornado.mp3', volume: 0.2 }
+                },
+
+                /* 🐘 ROMA — твой супер-объект (замедляет время) */
+                roma: {
+                    reward: 0.0,        // очки не даём — эффект slow-mo
+                    size: 84,
+                    src: './roma.png',  // <--- положи файл roma.png рядом с этим HTML
+                    chance: 0.25,
+                    maxPerGame: 1,      // один раз за раунд
+                    allowEvade: false,
+                    allowSwim: true,
+                    // свой медленный диапазон падения
+                    fallMin: 2400,
+                    fallMax: 3600,
+                    sound: { src: './roma.mp3', volume: 0.7 },
+                    fallbackSvg:
+                        `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><circle cx='32' cy='32' r='30' fill='#ffd7b3'/></svg>`
                 }
             },
 
@@ -652,6 +836,8 @@
                 `• Paczka z Ręką = <b>+${zl(E.big.reward)}</b>`,
                 `💣 Bomba = <b>${zl(E.bomb.reward)}</b>`,
                 `• Zestaw trzech kaw = <b>${zl(E.tornado.reward)}</b>`,
+                `• Złap mnie — spowolnienie czasu na <b>3 sekundy</b>`
+
             ].join('<br>');
             document.getElementById('rulesText').innerHTML = txt;
         })();
@@ -680,6 +866,7 @@
             regSound('el.big', E.big.sound);
             regSound('el.bomb', E.bomb.sound);
             regSound('el.tornado', E.tornado.sound);
+            regSound('el.roma', E.roma.sound);
             (E.normal.items || []).forEach((it, i) => regSound(`el.normal.${i}`, it.sound));
         })();
 
@@ -731,6 +918,147 @@
         }
         function vortex(x, y) { const v = document.createElement('div'); v.className = 'vortex'; v.style.left = x + 'px'; v.style.top = y + 'px'; app.appendChild(v); setTimeout(() => v.remove(), 620); }
 
+        /* === PRISM FX для ROMA === */
+        function romaPrismFX(x, y) {
+            // core
+            const core = document.createElement('div');
+            core.className = 'prism-core';
+            core.style.left = x + 'px'; core.style.top = y + 'px';
+            app.appendChild(core);
+            setTimeout(() => core.remove(), 720);
+
+            // halo
+            const halo = document.createElement('div');
+            halo.className = 'prism-halo';
+            halo.style.left = x + 'px'; halo.style.top = y + 'px';
+            app.appendChild(halo);
+            setTimeout(() => halo.remove(), 820);
+
+            // shards
+            const shards = 26;
+            for (let i = 0; i < shards; i++) {
+                const s = document.createElement('div');
+                s.className = 'prism-shard';
+                s.style.left = x + 'px'; s.style.top = y + 'px';
+                const ang = (i / shards) * Math.PI * 2 + (Math.random() * 0.35 - 0.175);
+                const r = 60 + Math.random() * 110;
+                const dx = Math.cos(ang) * r + 'px';
+                const dy = Math.sin(ang) * r + 'px';
+                const rot = (Math.random() * 260 - 130) + 'deg';
+                s.style.setProperty('--dx', dx);
+                s.style.setProperty('--dy', dy);
+                s.style.setProperty('--rot', rot);
+                s.style.filter = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`;
+                app.appendChild(s);
+                setTimeout(() => s.remove(), 950);
+            }
+
+            // trails
+            const trails = 16;
+            for (let i = 0; i < trails; i++) {
+                const t = document.createElement('div');
+                t.className = 'prism-trail';
+                t.style.left = x + 'px'; t.style.top = y + 'px';
+                const ang = Math.random() * Math.PI * 2;
+                const r = 30 + Math.random() * 70;
+                t.style.setProperty('--dx', (Math.cos(ang) * r) + 'px');
+                t.style.setProperty('--dy', (Math.sin(ang) * r) + 'px');
+                app.appendChild(t);
+                setTimeout(() => t.remove(), 620);
+            }
+
+            // лёгкая «виньетка» поверх
+            const vg = document.createElement('div');
+            vg.className = 'freeze-vignette';
+            app.appendChild(vg);
+            setTimeout(() => vg.remove(), 260);
+        }
+
+        /* === Мощные осколки при клике по ROMA === */
+        function shardsBurst(x, y, n = 24) {
+            for (let i = 0; i < n; i++) {
+                const d = document.createElement('div');
+                d.style.position = 'absolute';
+                d.style.left = x + 'px';
+                d.style.top = y + 'px';
+                d.style.width = 0;
+                d.style.height = 0;
+                const col = Math.random() < .5 ? '#ffa84d' : '#ffd7b3';
+                const s = 10 + Math.random() * 12;
+                d.style.borderLeft = `${s}px solid transparent`;
+                d.style.borderRight = `${s}px solid transparent`;
+                d.style.borderBottom = `${s * 1.6}px solid ${col}`;
+                d.style.filter = 'drop-shadow(0 2px 8px rgba(0,0,0,.45))';
+                d.style.pointerEvents = 'none';
+
+                const ang = Math.random() * Math.PI * 2;
+                const dist = 60 + Math.random() * 140;
+                const tx = Math.cos(ang) * dist;
+                const ty = Math.sin(ang) * dist * (Math.random() < .4 ? 1.6 : 1.0);
+
+                d.animate([
+                    { transform: 'translate(-50%, -50%) rotate(0deg)', opacity: 1 },
+                    { transform: `translate(${tx - 50}px, ${ty - 50}px) rotate(${(Math.random() * 360) | 0}deg)`, opacity: 0 }
+                ], { duration: 700 + Math.random() * 600, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'forwards' });
+
+                app.appendChild(d);
+                setTimeout(() => d.remove(), 1400);
+            }
+        }
+
+        /* === Таблица лидеров (localStorage) === */
+        const LB_KEY = 'ec_leaderboard_v1';
+        function loadScores() {
+            try { return JSON.parse(localStorage.getItem(LB_KEY) || '[]'); } catch { return []; }
+        }
+        function saveScore(name, score) {
+            const arr = loadScores();
+            arr.push({ name: String(name || 'Gość').slice(0, 16), score: Number(score) || 0, ts: Date.now() });
+            arr.sort((a, b) => b.score - a.score);
+            const top = arr.slice(0, 5);
+            localStorage.setItem(LB_KEY, JSON.stringify(top));
+            return top;
+        }
+        function renderLeaderboardHTML(list) {
+            list = (list || []).slice(0, 5); 
+            if (!list.length) return '<p class="text-muted" style="text-align:center">Brak wyników — bądź pierwszy!</p>';
+            const rows = list.map((it, i) =>
+                `<tr>
+                   <td style="padding:6px 10px">${i + 1}</td>
+                   <td style="padding:6px 10px">${it.name}</td>
+                   <td style="padding:6px 10px; text-align:right">${zl(it.score)}</td>
+                 </tr>`
+            ).join('');
+            return `
+                <div style="margin-top:12px">
+                  <h3 style="margin:8px 0 6px 0">🏆 Tablica wyników</h3>
+                  <table style="width:100%; border-collapse:collapse; font-weight:600; background:#141414; border:1px solid #222; border-radius:12px; overflow:hidden">
+                    <thead>
+                      <tr style="background:#191919">
+                        <th style="text-align:left; padding:6px 10px; width:50px">#</th>
+                        <th style="text-align:left; padding:6px 10px">Imię</th>
+                        <th style="text-align:right; padding:6px 10px">Wynik</th>
+                      </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                  </table>
+                </div>
+            `;
+        }
+
+        /* ========= SLOW-MO логика ========= */
+        let slowmoTimerId = null;
+        function enterSlowmo(ms = 3000) {
+            app.classList.add('slowmo');
+            try { if (navigator.vibrate) navigator.vibrate([40, 60, 40]); } catch { }
+            if (slowmoTimerId) { clearTimeout(slowmoTimerId); slowmoTimerId = null; }
+            slowmoTimerId = setTimeout(exitSlowmo, ms);
+        }
+        function exitSlowmo() {
+            app.classList.remove('slowmo');
+            if (slowmoTimerId) { clearTimeout(slowmoTimerId); slowmoTimerId = null; }
+        }
+
         /* ========= Счёт ========= */
         function update() {
             const cap = CONFIG.game.cap;
@@ -740,12 +1068,17 @@
         }
 
         /* ========= Падение ========= */
-        function fallSetup(el, { allowEvade = true, allowSwim = true, size = 56 } = {}) {
+        function fallSetup(el, { allowEvade = true, allowSwim = true, size = 56, customDur = null } = {}) {
             const G = CONFIG.game;
             el.style.left = rand(0, app.clientWidth - size) + 'px';
             if (Math.random() < 0.25) el.style.setProperty('--rot', (Math.random() < 0.5 ? -1 : 1) * rand(120, 360) + 'deg');
-            const dur = rand(G.fallMin, G.fallMax);
-            el.style.top = '-80px'; el.style.setProperty('--fallDur', dur + 'ms'); el.style.animation = 'fall ' + dur + 'ms linear forwards';
+
+            // поддержка персональной длительности
+            const dur = (customDur ?? rand(G.fallMin, G.fallMax));
+
+            el.style.top = '-80px';
+            el.style.setProperty('--fallDur', dur + 'ms');
+            el.style.animation = 'fall ' + dur + 'ms linear forwards';
             el.addEventListener('animationend', () => el.remove(), { once: true });
 
             if (allowSwim && Math.random() < G.chSwim) {
@@ -805,11 +1138,21 @@
             const key = SND['el.tornado'] ? 'el.tornado' : 'tornado';
             return { el: div, size: T.size, reward: T.reward, allowEvade: T.allowEvade, allowSwim: T.allowSwim, soundKey: key };
         }
+        function makeRoma() {
+            const R = CONFIG.elements.roma;
+            const img = new Image(); img.decoding = 'async'; img.loading = 'eager';
+            img.src = R.src || svgToDataUri(R.fallbackSvg);
+            img.onerror = () => { img.onerror = null; img.src = svgToDataUri(R.fallbackSvg); };
+            const key = SND['el.roma'] ? 'el.roma' : (SND['el.super'] ? 'el.super' : 'hit');
+            return { el: img, size: R.size, reward: R.reward, allowEvade: R.allowEvade, allowSwim: R.allowSwim, soundKey: key };
+        }
 
-        /* ========= Планирование спец-объектов по времени ========= */
+        /* ========= Планирование спец-объектов ========= */
         let tickNo = 0;            // текущий номер тика спавна
         let superTick = null;      // когда показать супер-слона
         let bigTicks = new Set();  // когда показывать big
+        let romaCount = 0;         // сколько раз заспавнен Рома
+        let romaTick = null;       // когда появится Рома
         const randi = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 
         function planSpecials() {
@@ -837,6 +1180,24 @@
                 if (ok) for (const bt of bigTicks) { if (Math.abs(t - bt) < minGapTicks) { ok = false; break; } }
                 if (ok) bigTicks.add(t);
             }
+
+            // --- ROMA окно появления (после 40% времени и до ~88%) ---
+            const romaWin = [0.40, 0.88];
+            const minGapTicksAll = Math.ceil(2500 / CONFIG.game.spawnInterval);
+            romaTick = randi(
+                Math.floor(totalTicks * romaWin[0]),
+                Math.floor(totalTicks * romaWin[1])
+            );
+            let tries = 40;
+            while (tries-- > 0) {
+                let ok = Math.abs(romaTick - superTick) >= minGapTicksAll;
+                if (ok) for (const bt of bigTicks) { if (Math.abs(romaTick - bt) < minGapTicksAll) { ok = false; break; } }
+                if (ok) break;
+                romaTick = randi(
+                    Math.floor(totalTicks * romaWin[0]),
+                    Math.floor(totalTicks * romaWin[1])
+                );
+            }
         }
 
         /* ========= Спавн ========= */
@@ -846,6 +1207,11 @@
 
             // номер текущего тика
             const cur = tickNo++;
+
+            // --- ROMA по расписанию: один раз за раунд
+            if (E.roma?.maxPerGame && romaCount < (E.roma.maxPerGame || 1) && cur === romaTick) {
+                romaCount++; spawnRoma(); return;
+            }
 
             // спец-объекты по расписанию
             if (E.super.maxPerGame && superCount < (E.super.maxPerGame || 1) && cur === superTick) {
@@ -906,9 +1272,29 @@
                 onHit(t.reward, '')(e);
             }, { once: true });
         }
+        function spawnRoma() {
+            const r = makeRoma(); r.el.className = 'roma';
+
+            // персональный диапазон падения ROMA
+            const frMin = CONFIG.elements.roma.fallMin || CONFIG.game.fallMin;
+            const frMax = CONFIG.elements.roma.fallMax || CONFIG.game.fallMax;
+            const dur = rand(frMin, frMax);
+
+            fallSetup(r.el, { allowEvade: r.allowEvade, allowSwim: r.allowSwim, size: r.size, customDur: dur });
+
+            // новый FX + усиленные осколки
+            r.el.addEventListener('pointerdown', e => {
+                play(r.soundKey || 'hit'); vibr([30, 50, 30]);
+                shardsBurst(e.clientX, e.clientY, 28);    // мощные осколки
+                romaPrismFX(e.clientX, e.clientY);        // призматический эффект
+                shake();                                   // тряска камеры
+                enterSlowmo(3000);                         // 3 сек слоумо
+                e.currentTarget.remove();
+            }, { once: true });
+        }
 
         /* === Притяжение к торнадо === */
-        function pullNearby(x, y, { radius = 220, strength = 120, dur = 360 } = {}) {
+        function pullNearby(x, y, { radius = 220, strength = 60, dur = 620 } = {}) {
             const start = performance.now();
             const elems = Array.from(document.querySelectorAll('.logo,.super,.big'));
             const meta = elems.map(el => { const r = el.getBoundingClientRect(); return { el, w: r.width, h: r.height }; });
@@ -949,11 +1335,11 @@
             if (left > 0) requestAnimationFrame(tick); else endGame();
         }
         function clearField() {
-            document.querySelectorAll('.logo,.super,.big,.tornado,.bomb,.sheet,.ring,.confetti,.float,.boom,.crit-flash,.crit-burst,.crit-ray,.twist,.vortex').forEach(n => n.remove());
+            document.querySelectorAll('.logo,.super,.big,.tornado,.bomb,.roma,.sheet,.ring,.confetti,.float,.boom,.crit-flash,.crit-burst,.crit-ray,.twist,.vortex').forEach(n => n.remove());
         }
         function startGame() {
             running = false; if (spawnTimer) clearInterval(spawnTimer);
-            clearField(); discount = 0; superCount = 0; bigCount = 0; update();
+            clearField(); discount = 0; superCount = 0; bigCount = 0; romaCount = 0; exitSlowmo(); update();
             startOv.style.display = 'none';
 
             // план на раунд
@@ -965,17 +1351,41 @@
             if (CONFIG.sounds.enabled && bgMusic) { try { bgMusic.currentTime = 0; bgMusic.play(); } catch { } }
             requestAnimationFrame(tick);
         }
+
+        /* === Конец игры + Таблица лидеров === */
         function endGame() {
             running = false; clearInterval(spawnTimer);
             const final = Math.round(discount);
             const s = document.createElement('div'); s.className = 'sheet';
-            s.innerHTML = '<div style="text-align:center;">'
-                + '<h2>Koniec!</h2>'
-                + '<p>Twój rabat: <b>' + zl(final) + '</b></p>'
-                + '<p style="opacity:.9;margin-top:12px">Zrób zrzut ekranu i <b>wyślij nam w wiadomości</b>.</p>'
-                + '<br><button class="btn" id="again">Jeszcze raz</button>'
-                + '</div>';
+            const currentLB = loadScores();
+
+            s.innerHTML =
+                `<div style="text-align:center">
+                    <h2>Koniec!</h2>
+                    <p>Twój rabat: <b>${zl(final)}</b></p>
+                    <p style="opacity:.9;margin-top:12px">Zrób zrzut ekranu i <b>wyślij nam w wiadomości</b>.</p>
+
+
+                    <div style="margin:12px 0 6px">
+                      <input id="lbName" type="text" maxlength="16" placeholder="Twoje imię"
+                             style="width: 220px; padding:10px 12px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; font-weight:700"/>
+                      <button class="btn" id="saveScore" style="margin-left:8px">Zapisz</button>
+                      <p style="opacity:.9;margin-top:12px">Max 5 osób</b>.</p>
+                    </div>
+
+                    <div id="lbBox">${renderLeaderboardHTML(currentLB)}</div>
+
+                    <br>
+                    <button class="btn" id="again">Jeszcze raz</button>
+                 </div>`;
+
             document.body.appendChild(s);
+
+            s.querySelector('#saveScore').onclick = () => {
+                const name = s.querySelector('#lbName').value.trim() || 'Gość';
+                const top = saveScore(name, final);
+                s.querySelector('#lbBox').innerHTML = renderLeaderboardHTML(top);
+            };
             s.querySelector('#again').onclick = () => { s.remove(); startOv.style.display = 'flex'; };
         }
 
